@@ -1,33 +1,44 @@
 package br.com.dominio;
 
+import javax.swing.JOptionPane;
+
+import br.com.dominio.mensagem.Mensagem;
+import br.com.dominio.mensagem.MensagemEmail;
+import br.com.dominio.mensagem.MensagemFactory;
+
 /*
- * Demonstrando o funcionamento do padrão de projecto Singleton: ele resolve o seguinte problema: não permite que haja duas ou mais instancias de uma determinada Class soltas no projecto
+ * Demonstrando o funcionamento do padrão de projecto Factory Method: ele lida com problemas de crião de objectos
  * 
- * Exemplo: uma conexão com banco de dados. É aconselhável te apenas uma conexão com BD em toda nossa aplicação. O Sigleton surge para tornar isso possível.
+ * Usamos ele quando queremos criar um objecto sem especificar qual class será utilizada na criação deste objecto.
  * 
- * Vamos demosntrar neste exemplo o funcionamento de um Singleton usando um gerenciador de impressão
+ * Para isto cria-se uma "Interface" ou uma class "Obstract" responsável em criar objectos. Mas quem delega a forma como esses objectos serão criados serão as "sub classes" desta mesma "Interface" ou class Obstract
+ * 
+ * Vamos demonstrar o funcionamento deste padrão através de um sistema de envio de mensagem (Email ou por SMS)
+ * 
+ * Este padrão possui um poder de desacoplamento muito forte
  * */
 public class Program {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
-		/* Já não é possível instanciar o GerenciadorImpressão do jeito padrão (usando new GerenciadorImpressão())
-		GerenciadorImpressao g1 = new GerenciadorImpressao();
-		GerenciadorImpressao g2 = new GerenciadorImpressao();
-		GerenciadorImpressao g3 = new GerenciadorImpressao();
-		GerenciadorImpressao g4 = new GerenciadorImpressao();
-		*/
+		String texto = JOptionPane.showInputDialog(null);
 		
-		GerenciadorImpressao g1 = GerenciadorImpressao.getInstance();
-		GerenciadorImpressao g2 = GerenciadorImpressao.getInstance();
-		GerenciadorImpressao g3 = GerenciadorImpressao.getInstance();
-		GerenciadorImpressao g4 = GerenciadorImpressao.getInstance();
+		Mensagem mensagem = new MensagemEmail();
 		
-		System.out.println(g1);
-		System.out.println(g2);
-		System.out.println(g3);
-		System.out.println(g4);
+		mensagem.enviar(texto);
+		
+		/*
+		 *  Percebe-se que o nosso programa envia mensagem tanto por SMS quanto por Email.
+		 *  Mas para funcionar, a gente precisa constantemente entrar na class Program.java, ir até á linha 25 realizar a troca manual de "new MensagemEmail" pelo "new MensagemSMS"
+		 *  
+		 *  Não é muito elegante. Ainda mais se o nosso codigo for gigante. Teriamos que catar linha por linha e achar aonde devemos realizar a troca.
+		 *  
+		 *  A solução para isso é usar o padrão "Factory Method". Para isso vamos criar uma class chamada "MensagemFactory" que é uma fábrica de objectos do tipo"Mensagem"
+		 * */
+		
+		// Apos criar o MensagemFactory, basta chamar ele deste jeito:
+		Mensagem mensagem2 = MensagemFactory.getMensagem(2);
+		mensagem2.enviar(texto);
 	}
 
 }
