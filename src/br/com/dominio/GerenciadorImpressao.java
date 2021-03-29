@@ -15,9 +15,9 @@ public class GerenciadorImpressao {
 	 * 2- construtor privado: Para que não seja permitido instanciar essa class
 	 * usando o jeito padrão (pelo construtor): new GerenciadorImpressao()
 	 * 
-	 * 3 - criar um método estático publico que retorna um gerenciador de impressão
-	 * para o sistema, e em seguida instanciar a variável de class
-	 * (gerenciadorImpressao)e depois verificar a commisão usando if
+	 * 3 - criar um método estático publico que retorna um GerenciadorImpressão
+	 * para o sistema, e em seguida verificar a commisão usando if e depois instanciar a variável de class em caso do gerenciadorImpressao for null
+	 * (gerenciadorImpressao)
 	 * 
 	 */
 	private static GerenciadorImpressao gerenciadorImpressao;
