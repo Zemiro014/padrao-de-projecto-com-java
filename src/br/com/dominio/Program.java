@@ -1,44 +1,66 @@
 package br.com.dominio;
 
-import javax.swing.JOptionPane;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 
-import br.com.dominio.mensagem.Mensagem;
-import br.com.dominio.mensagem.MensagemEmail;
-import br.com.dominio.mensagem.MensagemFactory;
+import br.com.dominio.modelo.Cliente;
+import br.com.dominio.modelo.Pedido;
+import br.com.dominio.modelo.Produto;
+import br.com.dominio.modelo.Vendedor;
 
 /*
- * Demonstrando o funcionamento do padrão de projecto Factory Method: ele lida com problemas de crião de objectos
+ * Demonstrando o funcionamento do padrão de projecto Builder: é um padrão que ajuda a gente a criar objectos complexos
  * 
- * Usamos ele quando queremos criar um objecto sem especificar qual class será utilizada na criação deste objecto.
- * 
- * Para isto cria-se uma "Interface" ou uma class "Obstract" responsável em criar objectos. Mas quem delega a forma como esses objectos serão criados serão as "sub classes" desta mesma "Interface" ou class Obstract
- * 
- * Vamos demonstrar o funcionamento deste padrão através de um sistema de envio de mensagem (Email ou por SMS)
- * 
- * Este padrão possui um poder de desacoplamento muito forte
+
  * */
 public class Program {
 
 	public static void main(String[] args) {
 
-		String texto = JOptionPane.showInputDialog(null);
+		/*
+		 * Normalmente a gente construiria os objectos desta forma. Mas desta forma não é trivial
+		 * 
+		 * Imagina por exemplo que tivessemos que lidar com 20 produtos? teriamos que criar os 20 produtos um a um.
+		 * 
+		 * 
+		 * */
+		Cliente cliente = new Cliente();
+		cliente.setCodigo(100);
+		cliente.setNome("Carlos");
+		cliente.setTelefone("9254-6733");
 		
-		Mensagem mensagem = new MensagemEmail();
+		Vendedor vendedor = new Vendedor();
+		vendedor.setCodigo(1);
+		vendedor.setNome("Joao");
 		
-		mensagem.enviar(texto);
+		Produto produto1 = new Produto();
+		produto1.setQuantidade(1);
+		produto1.setNome("caderno");
+		produto1.setValor(new BigDecimal(10.00));
+		
+		Produto produto2 = new Produto();
+		produto2.setQuantidade(2);
+		produto2.setNome("caneta");
+		produto2.setValor(new BigDecimal(1.50));
+		
+		Pedido pedido = new Pedido();
+		pedido.setNumeroPedido("00001");
+		pedido.setCliente(cliente);
+		pedido.setVendedor(vendedor);
+		pedido.setProdutos(new ArrayList<>());
+		pedido.getProdutos().add(produto1);
+		pedido.getProdutos().add(produto2);
+		
+		pedido.informacoes();
 		
 		/*
-		 *  Percebe-se que o nosso programa envia mensagem tanto por SMS quanto por Email.
-		 *  Mas para funcionar, a gente precisa constantemente entrar na class Program.java, ir até á linha 25 realizar a troca manual de "new MensagemEmail" pelo "new MensagemSMS"
-		 *  
-		 *  Não é muito elegante. Ainda mais se o nosso codigo for gigante. Teriamos que catar linha por linha e achar aonde devemos realizar a troca.
-		 *  
-		 *  A solução para isso é usar o padrão "Factory Method". Para isso vamos criar uma class chamada "MensagemFactory" que é uma fábrica de objectos do tipo"Mensagem"
+		 * Para melhorar essa forma de construir os objectos, vamos recorrer ao padrão de projecto "Builder"
+		 * 
+		 * Para isso vamos criar o pacote builder que conterá a class PedidoBuilder. Nela conterá os métodos que representam as instancias de cada class que compoem pacote "modelo",
+		 *  ou seja, cada relacionamento que o Pedido tiver com uma class, será representado como um método no PedidoBuilder ( Exemplo: setCliente(parametros); setProdutos(parametros) etc )
+		 * 
+		 * Apos isso vamos construir um novo método principal que mostrará como trabalhar com o Builder. 
 		 * */
-		
-		// Apos criar o MensagemFactory, basta chamar ele deste jeito:
-		Mensagem mensagem2 = MensagemFactory.getMensagem(2);
-		mensagem2.enviar(texto);
 	}
 
 }
